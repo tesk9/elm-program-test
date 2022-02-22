@@ -251,4 +251,32 @@ all =
                     )
                     |> ProgramTest.clickButton "Clickable element"
                     |> ProgramTest.done
+        , test "finds button when there's a hidden button also in the DOM" <|
+            \() ->
+                TestingProgram.startView
+                    (Html.span []
+                        [ Html.button [ Html.Events.onClick (Log "CLICK") ] [ Html.text "3" ]
+                        , Html.span
+                            [ Html.Attributes.disabled True
+                            , Html.Attributes.hidden True
+                            ]
+                            [ Html.button [ Html.Events.onClick (Log "Shouldn't be clickable") ] [ Html.text "user_3" ] ]
+                        ]
+                    )
+                    |> ProgramTest.clickButton "3"
+                    |> ProgramTest.done
+        , test "finds button when there's a disabled button also in the DOM" <|
+            \() ->
+                TestingProgram.startView
+                    (Html.span []
+                        [ Html.button [ Html.Events.onClick (Log "CLICK") ] [ Html.text "3" ]
+                        , Html.button
+                            [ Html.Events.onClick (Log "Shouldn't be clickable")
+                            , Html.Attributes.disabled True
+                            ]
+                            [ Html.text "user_3" ]
+                        ]
+                    )
+                    |> ProgramTest.clickButton "3"
+                    |> ProgramTest.done
         ]
