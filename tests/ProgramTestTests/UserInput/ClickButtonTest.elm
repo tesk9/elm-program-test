@@ -172,4 +172,26 @@ all =
                     |> ProgramTest.clickButton "Click Me"
                     |> ProgramTest.done
                     |> expectAnyFailure
+        , issue144
+        ]
+
+
+issue144 : Test
+issue144 =
+    describe "regression test for #144"
+        [ test "finds role='button' span when another button is also present" <|
+            \() ->
+                TestingProgram.startView
+                    (Html.span []
+                        [ Html.span
+                            [ -- not including tabindex or other necessary attributes for test simplicity
+                              Html.Attributes.attribute "role" "button"
+                            , Html.Events.onClick (Log "CLICK")
+                            ]
+                            [ Html.map never (Html.text "Clickable element") ]
+                        , Html.button [] [ Html.text "Panda" ]
+                        ]
+                    )
+                    |> ProgramTest.clickButton "Clickable element"
+                    |> ProgramTest.done
         ]
